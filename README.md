@@ -1,31 +1,41 @@
-# centroid
+# fast centroid
 
-## Authors
+## authors
 
 - **Connor Hainje**, NYU
+- **David W Hogg**, NYU
 
-## Installation
+based in part on [Mohammadjavad Vakili's implementation](https://github.com/mjvakili/centerer) and the [astrometry.net source detection algorithms](https://github.com/dstndstn/astrometry.net).
+
+
+## installation
 
 ```bash
-pip install git+https://github.com/cmhainje/centroid
+pip install git+https://github.com/cmhainje/fast-centroid
 ```
+
 
 ## usage
 
+```python
+import centroid
+```
+
 ### off-the-shelf
 
-if you have your own PSF, smooth the image with it and pass both the image and its smoothed counterpart to `centroid.detect_peaks()`. if you don't have a PSF, pass only the image and we'll smooth it with a unit-width Gaussian.
+if you have your own PSF, smooth the image with it and pass both the image and its smoothed counterpart to `centroid.detect_peaks()`. if you don't have a PSF, pass only the image and we'll smooth it with a Gaussian.
 
 ```python
 centroid.detect_peaks(image, smooth, n_sigma=6, thresh=8)
 # or
-centroid.detect_peaks(image, n_sigma=6, thresh=8)
+centroid.detect_peaks(image, dpsf=1.0, n_sigma=6, thresh=8)
 ```
 
 there are two knobs you can turn when using this function:
 
 1. `n_sigma`: we compute an estimate of the noise level of `image` and only consider regions of the image where `smooth` exceeds `n_sigma` times this noise level. this can be disabled by setting `n_sigma=0`
 2. `thresh`: we only consider regions where the brightnesses of pixels in `smooth` exceed this threshold. this can be disabled by setting `thresh=0`.
+3. `dpsf`: if you don't supply `smooth`, we will smooth `image` with a Gaussian of width `dpsf`.
 
 ### fiddlier use cases
 
@@ -42,3 +52,5 @@ for example, disabling all conditions on the peaks (i.e. noise level or minimum 
 peak_mask = centroid.identify_local_maxima(image, size=5)
 peaks = centroid.centroid(image, peak_mask)
 ```
+
+see also the test script `tests/gaussians.py`
