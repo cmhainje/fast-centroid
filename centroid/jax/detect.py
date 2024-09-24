@@ -59,6 +59,6 @@ def detect_peaks(image, smooth=None, dpsf: float=1.0, n_sigma: float=6, thresh: 
     mask &= identify_local_maxima(smooth)
     if n_sigma > 0:
         mask &= identify_signifcant_regions(
-            smooth, sigma=estimate_noise(image), n_sigma=n_sigma
+            smooth, sigma=estimate_noise(image), n_sigma=n_sigma, dpsf=dpsf
         )
     return centroid(smooth, mask)

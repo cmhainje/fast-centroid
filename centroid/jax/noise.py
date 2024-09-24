@@ -36,7 +36,7 @@ def estimate_noise(image, sp=5, gridsize=20):
     return s
 
 
-def identify_signifcant_regions(image, sigma=None, n_sigma=6.0):
+def identify_signifcant_regions(image, sigma=None, n_sigma=6.0, dpsf=1.0):
     """
     Parameters:
         image (Array): image
@@ -47,5 +47,5 @@ def identify_signifcant_regions(image, sigma=None, n_sigma=6.0):
     if sigma is None:
         sigma = estimate_noise(image)
 
-    limit = (sigma / (2.0 * jnp.sqrt(jnp.pi) * 1.0)) * n_sigma
+    limit = (sigma / (2.0 * jnp.sqrt(jnp.pi) * dpsf)) * n_sigma
     return image >= limit
